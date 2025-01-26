@@ -1,4 +1,6 @@
-export async function createDocument(apiKey: string, file: File): Promise<any> {
+import arvoData from "@/mock-data/arvoData.json";
+
+export async function createDocument(apiKey: string, file: File, customer: any): Promise<any> {
   const formData = new FormData();
   formData.append("file", file);
   formData.append(
@@ -6,24 +8,12 @@ export async function createDocument(apiKey: string, file: File): Promise<any> {
     JSON.stringify({
       name: "Contrato Arvo",
       recipients: [
+        arvoData.arvoTecnologia,
+        arvoData.arvoContabilidade,
         {
-          email: "ramiromvalim@gmail.com",
-          first_name: "Arvo",
-          last_name: "Tech",
-          role: "ArvoTecnologia",
-          signing_order: 1,
-        },
-        {
-          email: "bornaacessorios@gmail.com",
-          first_name: "Arvo",
-          last_name: "Cont",
-          role: "ArvoContabilidade",
-          signing_order: 2,
-        },
-        {
-          email: "ramirotuk@gmail.com",
-          first_name: "Ramiro",
-          last_name: "Valim",
+          email: customer.email,
+          first_name: customer.firstName,
+          last_name: customer.lastName,
           role: "Customer",
           signing_order: 3,
         },
@@ -54,20 +44,14 @@ export async function createDocument(apiKey: string, file: File): Promise<any> {
           role: "ArvoContabilidade",
         },
         FullName: {
-          value: "Ramiro Valim",
+          value: customer.firstName + " " + customer.lastName,
           role: "Customer",
         },
         CPF: {
-          value: "123.456.789-00",
+          value: customer.cpf,
           role: "Customer",
         },
       },
-      metadata: {
-        "salesforce.opportunity_id": "123456",
-        my_favorite_pet: "Panda",
-      },
-      tags: ["created_via_api", "test_document"],
-      parse_form_fields: false,
     })
   );
 

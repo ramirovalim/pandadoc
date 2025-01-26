@@ -4,8 +4,9 @@
 
 ![Field Tags 2](image.png)
 
-- Use **roles** to define who needs to sign which field tag
-- Use **optIds** to set variables in your document
+1. Set your company emails at _mock-data/_
+2. Use **roles** to define who needs to sign which field tag
+3. Use **optIds** to set variables in your document
 
 ```js
 // textfield:user:name___ relates to:
