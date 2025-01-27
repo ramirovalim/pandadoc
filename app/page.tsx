@@ -4,32 +4,48 @@ import { useState } from "react";
 import { createDocument, checkDocumentStatus, sendDocument } from "@/services/pandadoc";
 
 export default function Home() {
-  const [apiKey, setApiKey] = useState("");
-  const [file, setFile] = useState<File | null>(null);
-  const [document, setDocument] = useState<any>(null);
-  const [documentId, setDocumentId] = useState("");
-  const [documentStatus, setDocumentStatus] = useState<any>(null);
-  const [documentSent, setDocumentSent] = useState<any>(null);
+  const [state, setState] = useState({
+    apiKey: "",
+    file: null as File | null,
+    document: null as any,
+    documentId: "",
+    documentStatus: null as any,
+    documentSent: null as any,
+  });
+
+  const setApiKey = (apiKey: string) => setState((prevState) => ({ ...prevState, apiKey }));
+  const setFile = (file: File | null) => setState((prevState) => ({ ...prevState, file }));
+  const setDocument = (document: any) => setState((prevState) => ({ ...prevState, document }));
+  const setDocumentId = (documentId: string) => setState((prevState) => ({ ...prevState, documentId }));
+  const setDocumentStatus = (documentStatus: any) => setState((prevState) => ({ ...prevState, documentStatus }));
+  const setDocumentSent = (documentSent: any) => setState((prevState) => ({ ...prevState, documentSent }));
+
+  // const [apiKey, setApiKey] = useState("");
+  // const [file, setFile] = useState<File | null>(null);
+  // const [document, setDocument] = useState<any>(null);
+  // const [documentId, setDocumentId] = useState("");
+  // const [documentStatus, setDocumentStatus] = useState<any>(null);
+  // const [documentSent, setDocumentSent] = useState<any>(null);
 
   // State for customer details
   const [customer, setCustomer] = useState({ email: "", firstName: "", lastName: "", cpf: "" });
 
   const handleCreateDocument = async () => {
-    if (!file) return;
-    const result = await createDocument(apiKey, file, customer);
+    if (!state.file) return;
+    const result = await createDocument(state.apiKey, state.file, customer);
     setDocument(result);
     setDocumentId(result.id);
   };
 
   const handleCheckStatus = async () => {
-    if (!documentId) return;
-    const status = await checkDocumentStatus(apiKey, documentId);
+    if (!state.documentId) return;
+    const status = await checkDocumentStatus(state.apiKey, state.documentId);
     setDocumentStatus(status);
   };
 
   const handleSendDoc = async () => {
-    if (!documentId) return;
-    const result = await sendDocument(apiKey, documentId);
+    if (!state.documentId) return;
+    const result = await sendDocument(state.apiKey, state.documentId);
     setDocumentSent(result);
   };
 
@@ -47,7 +63,7 @@ export default function Home() {
             className="border-2 p-2 rounded mt-1"
             type="text"
             id="api_key"
-            value={apiKey}
+            value={state.apiKey}
             onChange={(e) => setApiKey(e.target.value)}
           />
         </label>
@@ -97,14 +113,16 @@ export default function Home() {
           <button className="bg-blue-500 text-white rounded p-2" onClick={handleCheckStatus}>
             Check Document Status
           </button>
-          {documentStatus && (
-            <pre className="bg-gray-100 p-2 rounded overflow-x-auto">{JSON.stringify(documentStatus, null, 2)}</pre>
+          {state.documentStatus && (
+            <pre className="bg-gray-100 p-2 rounded overflow-x-auto">
+              {JSON.stringify(state.documentStatus, null, 2)}
+            </pre>
           )}
           <button className="bg-blue-500 text-white rounded p-2" onClick={handleSendDoc}>
             Send Document
           </button>
-          {documentSent && (
-            <pre className="bg-gray-100 p-2 rounded overflow-x-auto">{JSON.stringify(documentSent, null, 2)}</pre>
+          {state.documentSent && (
+            <pre className="bg-gray-100 p-2 rounded overflow-x-auto">{JSON.stringify(state.documentSent, null, 2)}</pre>
           )}
         </div>
       </div>

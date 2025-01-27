@@ -1,4 +1,4 @@
-import arvoData from "@/mock-data/arvoData.json";
+import arvoData from "@/data/arvoData.json";
 
 export async function createDocument(apiKey: string, file: File, customer: any): Promise<any> {
   const formData = new FormData();
@@ -10,6 +10,13 @@ export async function createDocument(apiKey: string, file: File, customer: any):
       recipients: [
         arvoData.arvoTecnologia,
         arvoData.arvoContabilidade,
+        {
+          email: customer.email,
+          first_name: customer.firstName,
+          last_name: customer.lastName,
+          role: "Customer",
+          signing_order: 3,
+        },
         {
           email: customer.email,
           first_name: customer.firstName,
