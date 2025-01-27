@@ -1,6 +1,6 @@
 import arvoData from "@/data/arvoData.json";
 
-export async function createDocument(apiKey: string, file: File, customer: any): Promise<any> {
+export async function createDocument(apiKey: string, file: File, customer: any, witness: any): Promise<any> {
   const formData = new FormData();
   formData.append("file", file);
   formData.append(
@@ -18,38 +18,14 @@ export async function createDocument(apiKey: string, file: File, customer: any):
           signing_order: 3,
         },
         {
-          email: customer.email,
-          first_name: customer.firstName,
-          last_name: customer.lastName,
-          role: "Customer",
-          signing_order: 3,
+          email: witness.email,
+          first_name: witness.firstName,
+          last_name: witness.lastName,
+          role: "Witness",
+          signing_order: 4,
         },
       ],
       fields: {
-        RazaoSocialT: {
-          value: "Arvo Tecnologia Razao Social 123",
-          role: "ArvoTecnologia",
-        },
-        EnderecoT: {
-          value: "Rua Arvo, 134 - Tecnologia",
-          role: "ArvoTecnologia",
-        },
-        CNPJT: {
-          value: "12345678/0001-90",
-          role: "ArvoTecnologia",
-        },
-        RazaoSocialC: {
-          value: "Arvo Contabilidade Razao Social 123",
-          role: "ArvoContabilidade",
-        },
-        EnderecoC: {
-          value: "Rua Arvo, 134 - Contabilidade",
-          role: "ArvoContabilidade",
-        },
-        CNPJC: {
-          value: "12345678/0001-90",
-          role: "ArvoContabilidade",
-        },
         FullName: {
           value: customer.firstName + " " + customer.lastName,
           role: "Customer",
@@ -57,6 +33,14 @@ export async function createDocument(apiKey: string, file: File, customer: any):
         CPF: {
           value: customer.cpf,
           role: "Customer",
+        },
+        RazaoSocial: {
+          value: customer.razaoSocial,
+          role: "Customer",
+        },
+        WitnessCpf: {
+          value: witness.cpf,
+          role: "Witness",
         },
       },
     })

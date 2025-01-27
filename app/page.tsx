@@ -20,19 +20,13 @@ export default function Home() {
   const setDocumentStatus = (documentStatus: any) => setState((prevState) => ({ ...prevState, documentStatus }));
   const setDocumentSent = (documentSent: any) => setState((prevState) => ({ ...prevState, documentSent }));
 
-  // const [apiKey, setApiKey] = useState("");
-  // const [file, setFile] = useState<File | null>(null);
-  // const [document, setDocument] = useState<any>(null);
-  // const [documentId, setDocumentId] = useState("");
-  // const [documentStatus, setDocumentStatus] = useState<any>(null);
-  // const [documentSent, setDocumentSent] = useState<any>(null);
-
-  // State for customer details
-  const [customer, setCustomer] = useState({ email: "", firstName: "", lastName: "", cpf: "" });
+  // State for customer and witness details
+  const [customer, setCustomer] = useState({ email: "", firstName: "", lastName: "", cpf: "", razaoSocial: "" });
+  const [witness, setWitness] = useState({ email: "", firstName: "", lastName: "", cpf: "" });
 
   const handleCreateDocument = async () => {
     if (!state.file) return;
-    const result = await createDocument(state.apiKey, state.file, customer);
+    const result = await createDocument(state.apiKey, state.file, customer, witness);
     setDocument(result);
     setDocumentId(result.id);
   };
@@ -51,6 +45,10 @@ export default function Home() {
 
   const updateCustomer = (field: string, value: string) => {
     setCustomer({ ...customer, [field]: value });
+  };
+
+  const updateWitness = (field: string, value: string) => {
+    setWitness({ ...witness, [field]: value });
   };
 
   return (
@@ -102,13 +100,50 @@ export default function Home() {
             onChange={(e) => updateCustomer("cpf", e.target.value)}
             className="border-2 p-2 rounded"
           />
+          <input
+            type="text"
+            placeholder="Customer Razao Social"
+            value={customer.razaoSocial}
+            onChange={(e) => updateCustomer("razaoSocial", e.target.value)}
+            className="border-2 p-2 rounded"
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <input
+            type="text"
+            placeholder="Witness Email"
+            value={witness.email}
+            onChange={(e) => updateWitness("email", e.target.value)}
+            className="border-2 p-2 rounded"
+          />
+          <input
+            type="text"
+            placeholder="Witness First Name"
+            value={witness.firstName}
+            onChange={(e) => updateWitness("firstName", e.target.value)}
+            className="border-2 p-2 rounded"
+          />
+          <input
+            type="text"
+            placeholder="Witness Last Name"
+            value={witness.lastName}
+            onChange={(e) => updateWitness("lastName", e.target.value)}
+            className="border-2 p-2 rounded"
+          />
+          <input
+            type="text"
+            placeholder="Witness CPF"
+            value={witness.cpf}
+            onChange={(e) => updateWitness("cpf", e.target.value)}
+            className="border-2 p-2 rounded"
+          />
         </div>
         <div className="flex flex-col gap-2">
           <button className="bg-blue-500 text-white rounded p-2" onClick={handleCreateDocument}>
             Create Document from PDF upload
           </button>
-          {document && (
-            <pre className="bg-gray-100 p-2 rounded overflow-x-auto">{JSON.stringify(document, null, 2)}</pre>
+          {state.document && (
+            <pre className="bg-gray-100 p-2 rounded overflow-x-auto">{JSON.stringify(state.document, null, 2)}</pre>
           )}
           <button className="bg-blue-500 text-white rounded p-2" onClick={handleCheckStatus}>
             Check Document Status
