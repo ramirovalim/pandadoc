@@ -1,4 +1,6 @@
-export async function sendDocument(apiKey: string, documentId: string): Promise<any> {
+import { DocumentSendResponse } from "pandadoc-node-client";
+
+export async function sendDocument(apiKey: string, documentId: string): Promise<DocumentSendResponse> {
   const response = await fetch(`https://api.pandadoc.com/public/v1/documents/${documentId}/send`, {
     method: "POST",
     headers: {

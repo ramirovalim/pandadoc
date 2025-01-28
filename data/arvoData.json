@@ -1,13 +1,13 @@
 {
   "arvoTecnologia": {
-    "email": "",
+    "email": "legal+tech@arvo.dev.br",
     "first_name": "Arvo",
     "last_name": "Tecnologia",
     "role": "ArvoTecnologia",
     "signing_order": 1
   },
   "arvoContabilidade": {
-    "email": "",
+    "email": "legal+cont@arvo.dev.br",
     "first_name": "Arvo",
     "last_name": "Contabilidade",
     "role": "ArvoContabilidade",

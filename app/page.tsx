@@ -1,34 +1,44 @@
 "use client";
 
+import { templates } from "@/data/templates";
+import { checkDocumentStatus, createDocument, sendDocument } from "@/services/pandadoc";
 import { useState } from "react";
-import { createDocument, checkDocumentStatus, sendDocument } from "@/services/pandadoc";
 
 export default function Home() {
   const [state, setState] = useState({
     apiKey: "",
     file: null as File | null,
+    fileUrl: "",
     document: null as any,
-    documentId: "",
+    documentId: undefined as string | undefined,
     documentStatus: null as any,
     documentSent: null as any,
   });
 
+  // console.log(templates);
+
   const setApiKey = (apiKey: string) => setState((prevState) => ({ ...prevState, apiKey }));
-  const setFile = (file: File | null) => setState((prevState) => ({ ...prevState, file }));
+  const setFileUrl = (fileUrl: string) => setState((prevState) => ({ ...prevState, fileUrl }));
   const setDocument = (document: any) => setState((prevState) => ({ ...prevState, document }));
   const setDocumentId = (documentId: string) => setState((prevState) => ({ ...prevState, documentId }));
   const setDocumentStatus = (documentStatus: any) => setState((prevState) => ({ ...prevState, documentStatus }));
   const setDocumentSent = (documentSent: any) => setState((prevState) => ({ ...prevState, documentSent }));
 
   // State for customer and witness details
-  const [customer, setCustomer] = useState({ email: "", firstName: "", lastName: "", cpf: "", razaoSocial: "" });
-  const [witness, setWitness] = useState({ email: "", firstName: "", lastName: "", cpf: "" });
+  const [customer, setCustomer] = useState({
+    email: "",
+    firstName: "",
+    lastName: "",
+    cpf: "",
+    razaoSocial: "",
+    signatureDate: new Date(),
+  });
 
   const handleCreateDocument = async () => {
-    if (!state.file) return;
-    const result = await createDocument(state.apiKey, state.file, customer, witness);
+    if (!state.fileUrl) return;
+    const result = await createDocument(state.apiKey, state.fileUrl, customer);
     setDocument(result);
-    setDocumentId(result.id);
+    setDocumentId(result.id ?? "");
   };
 
   const handleCheckStatus = async () => {
@@ -47,10 +57,6 @@ export default function Home() {
     setCustomer({ ...customer, [field]: value });
   };
 
-  const updateWitness = (field: string, value: string) => {
-    setWitness({ ...witness, [field]: value });
-  };
-
   return (
     <div className="flex flex-col items-center justify-evenly p-6">
       <img src="https://s3.amazonaws.com/awsmp-logos/PandaDoc.png" alt="PandaDoc Logo" className="mb-4" width={200} />
@@ -65,12 +71,19 @@ export default function Home() {
             onChange={(e) => setApiKey(e.target.value)}
           />
         </label>
-        <input
-          type="file"
-          id="myFile"
-          className="border-2 p-2 rounded"
-          onChange={(e) => setFile(e.target.files?.[0] || null)}
-        />
+        <select value={state.fileUrl} onChange={(e) => setFileUrl(e.target.value)}>
+          <option value="" disabled>
+            Select a PDF template
+          </option>
+          {templates.map((template) => {
+            return (
+              <option value={template.value} key={template.label}>
+                {template.label}
+              </option>
+            );
+          })}
+        </select>
+
         <div className="flex flex-col gap-2">
           <input
             type="text"
@@ -108,36 +121,7 @@ export default function Home() {
             className="border-2 p-2 rounded"
           />
         </div>
-        <div className="flex flex-col gap-2">
-          <input
-            type="text"
-            placeholder="Witness Email"
-            value={witness.email}
-            onChange={(e) => updateWitness("email", e.target.value)}
-            className="border-2 p-2 rounded"
-          />
-          <input
-            type="text"
-            placeholder="Witness First Name"
-            value={witness.firstName}
-            onChange={(e) => updateWitness("firstName", e.target.value)}
-            className="border-2 p-2 rounded"
-          />
-          <input
-            type="text"
-            placeholder="Witness Last Name"
-            value={witness.lastName}
-            onChange={(e) => updateWitness("lastName", e.target.value)}
-            className="border-2 p-2 rounded"
-          />
-          <input
-            type="text"
-            placeholder="Witness CPF"
-            value={witness.cpf}
-            onChange={(e) => updateWitness("cpf", e.target.value)}
-            className="border-2 p-2 rounded"
-          />
-        </div>
+
         <div className="flex flex-col gap-2">
           <button className="bg-blue-500 text-white rounded p-2" onClick={handleCreateDocument}>
             Create Document from PDF upload
